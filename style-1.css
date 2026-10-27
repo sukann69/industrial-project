@@ -1,0 +1,48 @@
+/* StockMini - โทนน้ำเงินเข้ม ขาว ฟ้า */
+:root{--navy:#7a3b00;--blue:#d97706;--sky:#fff3dc;--sky2:#ffd066;--red:#d64545;--amber:#b8860b;--green:#1f9d62;--gray:#7a6a50}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,"Noto Sans Thai",sans-serif;background:#fffaf0;color:#3a2a14;padding-bottom:76px}
+.top{background:var(--navy);color:#fff;padding:12px 16px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.top h1{margin:0;font-size:22px}.top span{font-size:12px;color:var(--sky2)}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:#fff;border-top:2px solid var(--sky);z-index:10}
+nav button{flex:1;border:0;background:none;padding:8px 2px;font-size:20px;color:var(--gray);display:flex;flex-direction:column;align-items:center}
+nav button small{font-size:11px}nav button.on{color:var(--blue);background:var(--sky);font-weight:700}
+main{max-width:980px;margin:0 auto;padding:12px}
+.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:12px}
+.card{background:#fff;border-radius:12px;padding:14px;border-left:5px solid var(--blue);box-shadow:0 1px 4px #7a3b001a}
+.card.warn{border-color:var(--amber)}.card b{display:block;font-size:24px;color:var(--navy)}.card span{font-size:13px;color:var(--gray)}
+.box{background:#fff;border-radius:12px;padding:14px;margin-bottom:12px;box-shadow:0 1px 4px #7a3b001a}
+h2{margin:0 0 10px;font-size:17px;color:var(--navy)}
+.muted{color:var(--gray);font-size:14px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+.bar input,.bar select{flex:1;min-width:130px}
+input,select{padding:10px;border:1px solid #e8cf9f;border-radius:8px;font:inherit;width:100%;background:#fff}
+.btn{background:var(--blue);color:#fff;border:0;padding:10px 16px;border-radius:8px;font:inherit;cursor:pointer;margin:2px}
+.btn.red{background:var(--red)}.btn.gray{background:#9a8a70}.btn.blue2{background:var(--navy)}
+.btn.sm{padding:5px 10px;font-size:13px}
+.form{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form label{display:flex;flex-direction:column;font-size:13px;gap:4px;color:var(--gray)}.full{grid-column:1/-1}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:14px}
+th{background:var(--navy);color:#fff;text-align:left;padding:8px;white-space:nowrap}
+td{padding:8px;border-bottom:1px solid #f1e3c6;white-space:nowrap}
+.num{text-align:right}
+.tag{padding:2px 8px;border-radius:10px;font-size:12px;color:#fff}
+.tag.ok{background:var(--green)}.tag.low{background:var(--amber)}.tag.out{background:var(--red)}
+.empty{text-align:center;color:var(--gray);padding:24px 10px;background:var(--sky);border-radius:10px}
+.chart{display:flex;align-items:flex-end;gap:8px;height:150px;overflow-x:auto;padding-top:6px}
+.col{flex:1;min-width:44px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%}
+.pair{display:flex;gap:3px;align-items:flex-end;height:110px}
+.pair i{width:14px;display:block;border-radius:3px 3px 0 0;min-height:2px}
+.pair .in{background:var(--blue)}.pair .out{background:var(--sky2)}
+.col small{font-size:10px;color:var(--gray)}
+.legend{font-size:12px;color:var(--gray);margin-top:4px}
+.modal{position:fixed;inset:0;background:#7a3b0099;display:flex;align-items:center;justify-content:center;z-index:50;padding:12px}
+.modal[hidden],[hidden]{display:none!important}
+.mbox{background:#fff;border-radius:14px;padding:16px;width:100%;max-width:480px;max-height:92vh;overflow:auto}
+.row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+.err{color:var(--red);font-size:14px;min-height:18px;margin:8px 0 0}
+#toast{position:fixed;top:12px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:10px 18px;border-radius:10px;z-index:99;opacity:0;pointer-events:none;transition:.3s}
+#toast.show{opacity:1}#toast.bad{background:var(--red)}
+@media(min-width:700px){.cards{grid-template-columns:repeat(4,1fr)}body{padding-bottom:0;padding-top:0}
+ nav{position:static;max-width:980px;margin:0 auto;border-radius:0 0 12px 12px}nav button{flex-direction:row;gap:6px;justify-content:center;font-size:16px}}
+@media print{nav,.noprint,.top span,#toast,.btn,.bar{display:none!important}body{background:#fff;padding:0}.view{display:none}#v-rep{display:block!important}}
