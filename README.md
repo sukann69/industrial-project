@@ -1,1 +1,1 @@
-# industrial-project
+# stockmini
