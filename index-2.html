@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>StockMini - ระบบจัดการสินค้าคงคลัง</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top"><h1>📦 StockMini</h1><span>Smart Inventory Management System</span></header>
+<nav id="nav">
+  <button data-v="dash" class="on">🏠<small>ภาพรวม</small></button>
+  <button data-v="prod">🧾<small>สินค้า</small></button>
+  <button data-v="tx">🔄<small>รับ/จ่าย</small></button>
+  <button data-v="low">⚠️<small>สต็อกต่ำ</small></button>
+  <button data-v="ana">📊<small>วิเคราะห์</small></button>
+  <button data-v="rep">🖨️<small>รายงาน</small></button>
+</nav>
+<main>
+
+<!-- ภาพรวม -->
+<section id="v-dash" class="view">
+  <div class="cards">
+    <div class="card"><b id="d-items">0</b><span>รายการสินค้า</span></div>
+    <div class="card"><b id="d-qty">0</b><span>จำนวนคงเหลือรวม</span></div>
+    <div class="card"><b id="d-val">0</b><span>มูลค่าโดยประมาณ (บาท)</span></div>
+    <div class="card warn"><b id="d-low">0</b><span>สินค้าใกล้หมด/หมด</span></div>
+  </div>
+  <div class="box"><h2>การรับเข้า/จ่ายออก 7 วันล่าสุด</h2><div id="d-chart"></div></div>
+  <div class="box"><h2>สินค้าที่ต้องเติมสต็อก</h2><div id="d-refill"></div></div>
+  <div class="box"><h2>ข้อมูลตัวอย่าง</h2>
+    <p class="muted">โหลดสินค้าตัวอย่าง 3 รายการเพื่อทดลองใช้ และลบออกได้ภายหลัง (ไม่กระทบข้อมูลที่คุณเพิ่มเอง)</p>
+    <button class="btn" id="btn-sample">โหลดข้อมูลตัวอย่าง</button>
+    <button class="btn red" id="btn-clear-sample">ลบข้อมูลตัวอย่าง</button>
+  </div>
+</section>
+
+<!-- จัดการสินค้า -->
+<section id="v-prod" class="view" hidden>
+  <div class="bar">
+    <input id="p-search" placeholder="ค้นหาชื่อหรือรหัสสินค้า">
+    <select id="p-cat"><option value="">ทุกหมวดหมู่</option></select>
+    <button class="btn" id="btn-add">+ เพิ่มสินค้า</button>
+  </div>
+  <div class="tw"><table><thead><tr><th>รหัส</th><th>ชื่อ</th><th>หมวด</th><th>ราคา</th><th>คงเหลือ</th><th>ขั้นต่ำ</th><th>สถานะ</th><th></th></tr></thead><tbody id="p-body"></tbody></table></div>
+  <div id="p-empty"></div>
+</section>
+
+<!-- รับ/จ่าย -->
+<section id="v-tx" class="view" hidden>
+  <div class="box"><h2>ทำรายการรับเข้า / จ่ายออก</h2>
+    <div id="t-nodata" class="muted"></div>
+    <div class="form" id="t-form">
+      <label>สินค้า<select id="t-prod"></select></label>
+      <label>ประเภท<select id="t-type"><option value="in">รับเข้า</option><option value="out">จ่ายออก</option></select></label>
+      <label>จำนวน<input id="t-qty" type="number" min="1" step="1" inputmode="numeric"></label>
+      <label>วันที่และเวลา<input id="t-time" type="datetime-local"></label>
+      <label class="full">หมายเหตุ<input id="t-note" maxlength="100"></label>
+      <button class="btn full" id="t-save">บันทึกรายการ</button>
+    </div>
+  </div>
+  <div class="box"><h2>ประวัติล่าสุด</h2><div class="tw"><table><thead><tr><th>เวลา</th><th>สินค้า</th><th>ประเภท</th><th>จำนวน</th><th>หมายเหตุ</th></tr></thead><tbody id="t-body"></tbody></table></div><div id="t-empty"></div></div>
+</section>
+
+<!-- สต็อกต่ำ -->
+<section id="v-low" class="view" hidden>
+  <div class="box"><h2>สินค้าที่ควรสั่งซื้อเพิ่ม</h2>
+    <p class="muted">แสดงเมื่อคงเหลือ ≤ จำนวนขั้นต่ำ และแนะนำจำนวนที่ต้องเติมให้ถึงระดับเป้าหมาย</p>
+    <div class="tw"><table><thead><tr><th>สินค้า</th><th>คงเหลือ</th><th>ขั้นต่ำ</th><th>เป้าหมาย</th><th>ควรเติม</th><th>สถานะ</th></tr></thead><tbody id="l-body"></tbody></table></div>
+    <div id="l-empty"></div>
+  </div>
+</section>
+
+<!-- วิเคราะห์ -->
+<section id="v-ana" class="view" hidden>
+  <div class="box"><h2>สรุปการเคลื่อนไหว</h2>
+    <div class="bar"><select id="a-mode"><option value="day">รายวัน</option><option value="month">รายเดือน</option></select></div>
+    <div class="cards"><div class="card"><b id="a-in">0</b><span>รับเข้ารวม (หน่วย)</span></div><div class="card"><b id="a-out">0</b><span>จ่ายออกรวม (หน่วย)</span></div></div>
+    <div id="a-chart"></div><div id="a-trend" class="muted"></div>
+  </div>
+  <div class="box"><h2>สินค้าที่จ่ายออกมากที่สุด</h2><div class="tw"><table><thead><tr><th>#</th><th>สินค้า</th><th>จ่ายออก</th></tr></thead><tbody id="a-rank"></tbody></table></div><div id="a-empty"></div></div>
+</section>
+
+<!-- รายงาน -->
+<section id="v-rep" class="view" hidden>
+  <div class="box noprint"><h2>ตัวเลือกรายงาน</h2>
+    <div class="bar"><label>ตั้งแต่ <input type="date" id="r-from"></label><label>ถึง <input type="date" id="r-to"></label></div>
+    <button class="btn" id="r-csv-p">ส่งออกสินค้า CSV</button>
+    <button class="btn" id="r-csv-t">ส่งออกประวัติ CSV</button>
+    <button class="btn blue2" id="r-print">🖨️ พิมพ์รายงาน</button>
+  </div>
+  <div class="box"><h2>ตารางสรุปสินค้า</h2><div class="tw"><table><thead><tr><th>รหัส</th><th>ชื่อ</th><th>คงเหลือ</th><th>ราคา</th><th>มูลค่า</th><th>สถานะ</th></tr></thead><tbody id="r-pbody"></tbody></table></div><div id="r-pempty"></div></div>
+  <div class="box"><h2>ประวัติรับเข้า/จ่ายออก <small id="r-range"></small></h2><div class="tw"><table><thead><tr><th>เวลา</th><th>รหัส</th><th>สินค้า</th><th>ประเภท</th><th>จำนวน</th><th>หมายเหตุ</th></tr></thead><tbody id="r-tbody"></tbody></table></div><div id="r-tempty"></div></div>
+</section>
+</main>
+
+<!-- หน้าต่างเพิ่ม/แก้ไขสินค้า -->
+<div class="modal" id="m-prod" hidden><div class="mbox">
+  <h2 id="m-title">เพิ่มสินค้า</h2>
+  <div class="form">
+    <label>รหัสสินค้า<input id="f-code" maxlength="20"></label>
+    <label>ชื่อสินค้า<input id="f-name" maxlength="60"></label>
+    <label>หมวดหมู่<input id="f-cat" maxlength="30" placeholder="เช่น เครื่องดื่ม"></label>
+    <label>ราคาต่อหน่วย (บาท)<input id="f-price" type="number" min="0" step="0.01" inputmode="decimal"></label>
+    <label>จำนวนเริ่มต้น<input id="f-qty" type="number" min="0" step="1" inputmode="numeric"></label>
+    <label>จำนวนขั้นต่ำ<input id="f-min" type="number" min="0" step="1" inputmode="numeric"></label>
+    <label class="full">ระดับสต็อกเป้าหมาย<input id="f-target" type="number" min="0" step="1" inputmode="numeric"></label>
+  </div>
+  <p id="f-err" class="err"></p>
+  <div class="row"><button class="btn gray" id="f-cancel">ยกเลิก</button><button class="btn" id="f-save">บันทึก</button></div>
+</div></div>
+
+<!-- หน้าต่างยืนยัน -->
+<div class="modal" id="m-conf" hidden><div class="mbox">
+  <h2>ยืนยันการลบ</h2><p id="c-msg"></p>
+  <div class="row"><button class="btn gray" id="c-no">ยกเลิก</button><button class="btn red" id="c-yes">ลบ</button></div>
+</div></div>
+
+<div id="toast"></div>
+<script src="script.js"></script>
+</body>
+</html>
